@@ -111,7 +111,11 @@ export function PaymentCorrection({
     <section className="payment-form-view" aria-labelledby="correction-title">
       <p className="eyebrow">Corregir pago</p>
       <h1 id="correction-title">Pago del {payment.paymentDate}</h1>
-      <form className="calculation-form standalone" action={formAction}>
+      <form
+        className="calculation-form standalone"
+        aria-busy={pending}
+        action={formAction}
+      >
         <input name="financingId" type="hidden" value={financingId} />
         <input name="paymentId" type="hidden" value={payment.id} />
         <Field

@@ -153,7 +153,11 @@ export function PaymentRegistration({ sale }: { sale: ActiveSaleSummary }) {
           </p>
         ) : null}
 
-        <form className="form-actions" action={registrationFormAction}>
+        <form
+          className="form-actions"
+          aria-busy={registrationPending}
+          action={registrationFormAction}
+        >
           <input
             name="amount"
             type="hidden"
@@ -194,6 +198,7 @@ export function PaymentRegistration({ sale }: { sale: ActiveSaleSummary }) {
 
       <form
         className="calculation-form standalone"
+        aria-busy={previewPending}
         action={previewFormAction}
         onSubmit={() => setIsEditing(false)}
       >

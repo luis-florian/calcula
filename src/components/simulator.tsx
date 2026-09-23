@@ -120,6 +120,7 @@ export function Simulator({
               <div className="simulator-layout">
                 <form
                   className="calculation-form"
+                  aria-busy={pending}
                   action={formAction}
                   onSubmit={() => setSaveStep("idle")}
                 >
@@ -621,7 +622,7 @@ function SaveSalePanel({
   }
 
   return (
-    <form className="save-panel" action={saveFormAction}>
+    <form className="save-panel" aria-busy={saving} action={saveFormAction}>
       <SimulationHiddenFields values={values} />
       <input name="saleName" type="hidden" value={saleName.trim()} />
       <input name="buyerName" type="hidden" value={buyerName.trim()} />
