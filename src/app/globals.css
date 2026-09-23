@@ -81,6 +81,10 @@ button:disabled {
   padding: clamp(18px, 4vw, 44px);
 }
 
+.main-content.narrow {
+  width: min(100%, 820px);
+}
+
 .empty-state {
   display: grid;
   min-height: 54svh;
@@ -171,6 +175,10 @@ button:disabled {
   display: grid;
   gap: 22px;
   padding: clamp(20px, 4vw, 32px);
+}
+
+.calculation-form.standalone {
+  margin-top: 18px;
 }
 
 .form-heading {
@@ -585,6 +593,71 @@ button:disabled {
   gap: 12px;
   border-top: 1px solid var(--border);
   padding-top: 18px;
+}
+
+.payment-form-view,
+.payment-review,
+.payment-result {
+  display: grid;
+  gap: 20px;
+  margin-top: 22px;
+}
+
+.payment-form-view h1,
+.payment-review h1,
+.payment-result h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3.8rem);
+  line-height: 1;
+}
+
+.payment-form-buyer,
+.payment-date-text,
+.payment-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.18rem;
+  font-weight: 800;
+}
+
+.payment-note {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  color: var(--accent-dark);
+  padding: 14px 16px;
+}
+
+.payment-preview-summary,
+.payment-result-summary {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+}
+
+.payment-check {
+  display: grid;
+  width: 82px;
+  height: 82px;
+  place-items: center;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.payment-result {
+  text-align: center;
+}
+
+.payment-result-summary {
+  text-align: left;
 }
 
 .bottom-nav {

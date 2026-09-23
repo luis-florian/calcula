@@ -71,9 +71,12 @@ export default async function SaleDetailPage({
             </div>
           </dl>
 
-          <button className="primary-action wide" disabled type="button">
+          <Link
+            className="primary-action wide"
+            href={`/sales/${sale.id}/payments/new`}
+          >
             REGISTRAR PAGO
-          </button>
+          </Link>
 
           <div className="detail-actions" aria-label="Opciones de la venta">
             <button className="secondary-action wide" disabled type="button">
