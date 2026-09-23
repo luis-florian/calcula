@@ -60,6 +60,12 @@ export default async function PaymentDetailPage({
               value={`${result.payment.daysElapsed}`}
             />
           </dl>
+          <Link
+            className="secondary-action wide"
+            href={`/sales/${id}/payments/${paymentId}/correct`}
+          >
+            Corregir este pago
+          </Link>
         </section>
       </main>
     </div>

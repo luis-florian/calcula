@@ -40,7 +40,57 @@ export default async function SaleDetailPage({
     notFound();
   }
 
-  const sale = result.sale;
+  if (result.sale.kind === "COMPLETED") {
+    const sale = result.sale.finalSummary;
+
+    return (
+      <div className="app-frame">
+        <main className="main-content">
+          <article className="sale-detail" aria-labelledby="sale-title">
+            <Link className="back-link" href="/">
+              ← MIS VENTAS
+            </Link>
+
+            <section className="payment-result" aria-labelledby="sale-title">
+              <p className="payment-check" aria-hidden="true">
+                ✓
+              </p>
+              <h1 id="sale-title">Venta completada</h1>
+              <p className="payment-form-buyer">
+                {sale.name} · {sale.buyerName}
+              </p>
+
+              <dl className="payment-result-summary">
+                <SummaryItem
+                  label="Total recibido"
+                  value={sale.totalReceived}
+                />
+                <SummaryItem label="Capital" value={sale.capital} />
+                <SummaryItem
+                  label="Intereses recibidos"
+                  value={sale.totalInterest}
+                />
+                <SummaryItem
+                  label="Primer pago"
+                  value={sale.firstPaymentDate}
+                />
+                <SummaryItem label="Último pago" value={sale.lastPaymentDate} />
+              </dl>
+
+              <Link
+                className="primary-action wide"
+                href={`/sales/${id}/payments`}
+              >
+                VER HISTORIAL
+              </Link>
+            </section>
+          </article>
+        </main>
+      </div>
+    );
+  }
+
+  const sale = result.sale.summary;
 
   return (
     <div className="app-frame">
@@ -97,6 +147,15 @@ export default async function SaleDetailPage({
           </div>
         </article>
       </main>
+    </div>
+  );
+}
+
+function SummaryItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="summary-item">
+      <dt>{label}</dt>
+      <dd>{value}</dd>
     </div>
   );
 }

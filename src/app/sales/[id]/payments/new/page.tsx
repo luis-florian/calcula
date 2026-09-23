@@ -40,17 +40,17 @@ export default async function NewPaymentPage({
     );
   }
 
-  if (!result.sale) {
+  if (!result.sale || result.sale.kind === "COMPLETED") {
     notFound();
   }
 
   return (
     <div className="app-frame">
       <main className="main-content narrow">
-        <Link className="back-link" href={`/sales/${result.sale.id}`}>
+        <Link className="back-link" href={`/sales/${result.sale.summary.id}`}>
           ← VOLVER A LA VENTA
         </Link>
-        <PaymentRegistration sale={result.sale} />
+        <PaymentRegistration sale={result.sale.summary} />
       </main>
     </div>
   );

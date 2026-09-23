@@ -9,16 +9,18 @@ import {
   type FinancialDate,
 } from "@/domain/financial";
 import type { Financing, Payment } from "@/db/schema";
-import { formatMoney, formatShortDate } from "@/lib/format";
+import { formatLongDate, formatMoney, formatShortDate } from "@/lib/format";
 
 export type PaymentHistoryItem = {
   amount: string;
+  amountRaw: string;
   closingBalance: string;
   daysElapsed: number;
   id: string;
   interest: string;
   openingBalance: string;
   paymentDate: string;
+  paymentDateLong: string;
   paymentDateRaw: string;
   principal: string;
 };
@@ -76,12 +78,14 @@ export function buildPaymentPlanSummary(input: {
 export function toPaymentHistoryItem(payment: Payment): PaymentHistoryItem {
   return {
     amount: formatMoney(payment.amount),
+    amountRaw: payment.amount,
     closingBalance: formatMoney(payment.closingBalance),
     daysElapsed: payment.daysElapsed,
     id: payment.id,
     interest: formatMoney(payment.interestAmount),
     openingBalance: formatMoney(payment.openingBalance),
     paymentDate: formatShortDate(payment.paymentDate),
+    paymentDateLong: formatLongDate(payment.paymentDate),
     paymentDateRaw: payment.paymentDate,
     principal: formatMoney(payment.principalAmount),
   };

@@ -28,7 +28,12 @@ export const paymentConfirmationSchema = paymentPreviewSchema.extend({
     ),
 });
 
+export const paymentCorrectionSchema = paymentPreviewSchema.extend({
+  paymentId: z.string().trim().min(1, "No se encontró el pago."),
+});
+
 export type PaymentPreviewInput = z.infer<typeof paymentPreviewSchema>;
 export type PaymentConfirmationInput = z.infer<
   typeof paymentConfirmationSchema
 >;
+export type PaymentCorrectionInput = z.infer<typeof paymentCorrectionSchema>;

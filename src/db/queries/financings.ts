@@ -71,6 +71,33 @@ export async function getActiveFinancingByOwner(input: {
   id: string;
   ownerId: string;
 }): Promise<Financing | null> {
+  return getFinancingByOwnerAndStatus({
+    ...input,
+    status: "ACTIVE",
+  });
+}
+
+export async function getFinancingByOwner(input: {
+  id: string;
+  ownerId: string;
+}): Promise<Financing | null> {
+  const db = getDb();
+  const [financing] = await db
+    .select()
+    .from(financings)
+    .where(
+      and(eq(financings.id, input.id), eq(financings.ownerId, input.ownerId)),
+    )
+    .limit(1);
+
+  return financing ?? null;
+}
+
+async function getFinancingByOwnerAndStatus(input: {
+  id: string;
+  ownerId: string;
+  status: FinancingStatus;
+}): Promise<Financing | null> {
   const db = getDb();
   const [financing] = await db
     .select()
@@ -79,7 +106,7 @@ export async function getActiveFinancingByOwner(input: {
       and(
         eq(financings.id, input.id),
         eq(financings.ownerId, input.ownerId),
-        eq(financings.status, "ACTIVE"),
+        eq(financings.status, input.status),
       ),
     )
     .limit(1);

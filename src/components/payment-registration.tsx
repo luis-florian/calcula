@@ -24,6 +24,55 @@ export function PaymentRegistration({ sale }: { sale: ActiveSaleSummary }) {
     useActionState(registerPaymentAction, initialRegistrationState);
 
   if (registrationState.result) {
+    if (
+      registrationState.result.completed &&
+      registrationState.result.finalSummary
+    ) {
+      return (
+        <section
+          className="payment-result"
+          aria-labelledby="payment-result-title"
+        >
+          <p className="payment-check" aria-hidden="true">
+            ✓
+          </p>
+          <h1 id="payment-result-title">Venta completada</h1>
+          <p className="payment-form-buyer">
+            {registrationState.result.finalSummary.name} ·{" "}
+            {registrationState.result.finalSummary.buyerName}
+          </p>
+          <dl className="payment-result-summary">
+            <SummaryItem
+              label="Total recibido"
+              value={registrationState.result.finalSummary.totalReceived}
+            />
+            <SummaryItem
+              label="Capital"
+              value={registrationState.result.finalSummary.capital}
+            />
+            <SummaryItem
+              label="Intereses recibidos"
+              value={registrationState.result.finalSummary.totalInterest}
+            />
+            <SummaryItem
+              label="Primer pago"
+              value={registrationState.result.finalSummary.firstPaymentDate}
+            />
+            <SummaryItem
+              label="Último pago"
+              value={registrationState.result.finalSummary.lastPaymentDate}
+            />
+          </dl>
+          <Link
+            className="primary-action wide"
+            href={`/sales/${sale.id}/payments`}
+          >
+            VER HISTORIAL
+          </Link>
+        </section>
+      );
+    }
+
     return (
       <section
         className="payment-result"

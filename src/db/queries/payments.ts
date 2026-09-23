@@ -1,4 +1,4 @@
-import { and, desc, inArray, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
 import { payments, type Payment } from "@/db/schema";
@@ -66,6 +66,23 @@ export async function listConfirmedPaymentsForFinancing(
       ),
     )
     .orderBy(desc(payments.paymentDate), desc(payments.createdAt));
+}
+
+export async function listConfirmedPaymentsForFinancingChronological(
+  financingId: string,
+): Promise<Payment[]> {
+  const db = getDb();
+
+  return db
+    .select()
+    .from(payments)
+    .where(
+      and(
+        eq(payments.financingId, financingId),
+        eq(payments.status, "CONFIRMED"),
+      ),
+    )
+    .orderBy(asc(payments.paymentDate), asc(payments.createdAt));
 }
 
 export async function getConfirmedPaymentByFinancing(input: {

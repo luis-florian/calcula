@@ -1,4 +1,4 @@
-import { getActiveFinancingByOwner } from "@/db/queries/financings";
+import { getFinancingByOwner } from "@/db/queries/financings";
 import {
   getConfirmedPaymentByFinancing,
   listConfirmedPaymentsForFinancing,
@@ -43,7 +43,7 @@ export async function getPaymentPlan(input: {
     };
   }
 
-  const financing = await getActiveFinancingByOwner({
+  const financing = await getFinancingByOwner({
     id: input.financingId,
     ownerId: input.ownerId,
   });
@@ -79,7 +79,7 @@ export async function getPaymentDetail(input: {
     };
   }
 
-  const financing = await getActiveFinancingByOwner({
+  const financing = await getFinancingByOwner({
     id: input.financingId,
     ownerId: input.ownerId,
   });
