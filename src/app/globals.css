@@ -238,10 +238,14 @@ button:disabled {
 
 .primary-action,
 .secondary-action {
+  display: inline-grid;
+  place-items: center;
   min-height: 58px;
   border-radius: 8px;
   font-weight: 800;
   padding: 14px 22px;
+  text-align: center;
+  text-decoration: none;
 }
 
 .primary-action {
@@ -268,6 +272,10 @@ button:disabled {
 
 .secondary-action.wide {
   width: 100%;
+}
+
+.action-link {
+  width: fit-content;
 }
 
 .form-actions.two-columns {
@@ -407,6 +415,22 @@ button:disabled {
   gap: 16px;
 }
 
+.completed-sales {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.completed-sales-list {
+  display: grid;
+  gap: 12px;
+}
+
+.completed-sales-list h3 {
+  margin: 8px 0 0;
+  font-size: 1.3rem;
+}
+
 .sale-card {
   display: grid;
   gap: 22px;
@@ -417,7 +441,9 @@ button:disabled {
 }
 
 .sale-card h3,
-.sale-card p {
+.sale-card p,
+.completed-sale-card h4,
+.completed-sale-card p {
   margin: 0;
 }
 
@@ -433,6 +459,25 @@ button:disabled {
   font-weight: 700;
 }
 
+.completed-sale-card {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 18px;
+}
+
+.completed-sale-card h4 {
+  font-size: 1.25rem;
+}
+
+.completed-sale-card p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .sale-summary {
   display: grid;
   gap: 14px;
@@ -440,10 +485,106 @@ button:disabled {
   margin: 0;
 }
 
+.completed-sale-summary {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+}
+
 .sale-summary .summary-item:first-child dd {
   color: var(--foreground);
   font-size: clamp(2rem, 6vw, 3.6rem);
   line-height: 1;
+}
+
+.sale-detail {
+  display: grid;
+  width: min(100%, 760px);
+  margin: 0 auto;
+  gap: 24px;
+}
+
+.back-link {
+  width: fit-content;
+  color: var(--accent-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sale-detail-heading {
+  display: grid;
+  gap: 8px;
+}
+
+.sale-detail-heading h1,
+.sale-detail-heading p {
+  margin: 0;
+}
+
+.sale-detail-heading h1 {
+  font-size: clamp(2.2rem, 8vw, 4.2rem);
+  line-height: 1;
+}
+
+.sale-detail-heading p {
+  color: var(--muted);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.balance-panel {
+  display: grid;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: clamp(28px, 8vw, 52px) 0;
+  text-align: center;
+}
+
+.balance-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.balance-panel strong {
+  font-size: clamp(3rem, 12vw, 6.5rem);
+  line-height: 0.95;
+  overflow-wrap: anywhere;
+}
+
+.detail-summary {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr 1fr;
+  margin: 0;
+}
+
+.detail-summary div {
+  display: grid;
+  gap: 6px;
+}
+
+.detail-summary dt {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.detail-summary dd {
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 800;
+}
+
+.detail-actions {
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
 }
 
 .bottom-nav {
@@ -479,7 +620,9 @@ button:disabled {
 
   .summary-list,
   .payment-row dl,
-  .sale-summary {
+  .sale-summary,
+  .completed-sale-summary,
+  .detail-summary {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -499,7 +642,9 @@ button:disabled {
 
   .summary-list,
   .payment-row dl,
-  .sale-summary {
+  .sale-summary,
+  .completed-sale-summary,
+  .detail-summary {
     grid-template-columns: 1fr;
   }
 

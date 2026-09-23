@@ -15,6 +15,14 @@ export type ActiveSaleSummary = {
   currentBalance: string;
 };
 
+export type CompletedSaleSummary = {
+  buyerName: string;
+  currentBalance: string;
+  id: string;
+  name: string;
+  statusLabel: string;
+};
+
 export function toActiveSaleSummary(
   financing: Pick<
     Financing,
@@ -39,5 +47,17 @@ export function toActiveSaleSummary(
     name: financing.name,
     nextPaymentDate: formatShortDate(nextPaymentDate),
     targetPayment: formatMoney(financing.targetPayment),
+  };
+}
+
+export function toCompletedSaleSummary(
+  financing: Pick<Financing, "buyerName" | "currentBalance" | "id" | "name">,
+): CompletedSaleSummary {
+  return {
+    buyerName: financing.buyerName || "Sin comprador",
+    currentBalance: formatMoney(financing.currentBalance),
+    id: financing.id,
+    name: financing.name,
+    statusLabel: "Finalizada",
   };
 }

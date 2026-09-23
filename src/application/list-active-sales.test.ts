@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { financialDate } from "@/domain/financial";
-import { toActiveSaleSummary } from "@/application/sales-summary";
+import {
+  toActiveSaleSummary,
+  toCompletedSaleSummary,
+} from "@/application/sales-summary";
 
 describe("toActiveSaleSummary", () => {
   it("summarizes a sale without payments using the first payment date", () => {
@@ -43,6 +46,25 @@ describe("toActiveSaleSummary", () => {
       buyerName: "Sin comprador",
       currentBalance: "Q762,772.60",
       nextPaymentDate: "15 NOV 2026",
+    });
+  });
+});
+
+describe("toCompletedSaleSummary", () => {
+  it("summarizes a completed sale separately from active payment timing", () => {
+    expect(
+      toCompletedSaleSummary({
+        buyerName: "Ana Lopez",
+        currentBalance: "0.00",
+        id: "fin_2",
+        name: "Terreno",
+      }),
+    ).toEqual({
+      buyerName: "Ana Lopez",
+      currentBalance: "Q0.00",
+      id: "fin_2",
+      name: "Terreno",
+      statusLabel: "Finalizada",
     });
   });
 });

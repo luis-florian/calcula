@@ -28,3 +28,25 @@ export async function listConfirmedPaymentsForFinancings(
     )
     .orderBy(desc(payments.paymentDate), desc(payments.createdAt));
 }
+
+export async function getLastConfirmedPaymentForFinancing(
+  financingId: string,
+): Promise<LastConfirmedPayment | null> {
+  const db = getDb();
+  const [payment] = await db
+    .select({
+      financingId: payments.financingId,
+      paymentDate: payments.paymentDate,
+    })
+    .from(payments)
+    .where(
+      and(
+        eq(payments.financingId, financingId),
+        eq(payments.status, "CONFIRMED"),
+      ),
+    )
+    .orderBy(desc(payments.paymentDate), desc(payments.createdAt))
+    .limit(1);
+
+  return payment ?? null;
+}

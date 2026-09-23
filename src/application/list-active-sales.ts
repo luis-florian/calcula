@@ -1,12 +1,18 @@
 import { financialDate, type FinancialDate } from "@/domain/financial";
-import { listActiveFinancingsByOwner } from "@/db/queries/financings";
+import {
+  listActiveFinancingsByOwner,
+  listCompletedFinancingsByOwner,
+} from "@/db/queries/financings";
 import { listConfirmedPaymentsForFinancings } from "@/db/queries/payments";
 import {
   toActiveSaleSummary,
+  toCompletedSaleSummary,
   type ActiveSaleSummary,
+  type CompletedSaleSummary,
 } from "@/application/sales-summary";
 
 export type ActiveSalesResult = {
+  completedSales: CompletedSaleSummary[];
   databaseUnavailable: boolean;
   sales: ActiveSaleSummary[];
 };
@@ -16,12 +22,14 @@ export async function listActiveSales(
 ): Promise<ActiveSalesResult> {
   if (!process.env.DATABASE_URL) {
     return {
+      completedSales: [],
       databaseUnavailable: true,
       sales: [],
     };
   }
 
   const financings = await listActiveFinancingsByOwner(ownerId);
+  const completedFinancings = await listCompletedFinancingsByOwner(ownerId);
   const payments = await listConfirmedPaymentsForFinancings(
     financings.map((financing) => financing.id),
   );
@@ -37,6 +45,7 @@ export async function listActiveSales(
   }
 
   return {
+    completedSales: completedFinancings.map(toCompletedSaleSummary),
     databaseUnavailable: false,
     sales: financings.map((financing) =>
       toActiveSaleSummary(

@@ -10,6 +10,7 @@ export default async function Home() {
 
   return (
     <Simulator
+      completedSales={activeSales.completedSales}
       initialSales={activeSales.sales}
       salesUnavailable={activeSales.databaseUnavailable}
     />

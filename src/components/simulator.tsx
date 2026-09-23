@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useMemo, useState } from "react";
 
 import {
@@ -8,7 +9,10 @@ import {
   type SaveSaleActionState,
   type SimulationActionState,
 } from "@/app/actions";
-import type { ActiveSaleSummary } from "@/application/sales-summary";
+import type {
+  ActiveSaleSummary,
+  CompletedSaleSummary,
+} from "@/application/sales-summary";
 
 type Mode = "PAYMENT" | "TERM";
 type SaveStep = "idle" | "form" | "confirm";
@@ -26,9 +30,11 @@ const simulationFieldNames = [
 ] as const;
 
 export function Simulator({
+  completedSales = [],
   initialSales = [],
   salesUnavailable = false,
 }: {
+  completedSales?: CompletedSaleSummary[];
   initialSales?: ActiveSaleSummary[];
   salesUnavailable?: boolean;
 }) {
@@ -76,6 +82,7 @@ export function Simulator({
         {activeSection === "sales" ? (
           <SalesView
             recentlySavedSaleId={saveState.sale?.id ?? null}
+            completedSales={completedSales}
             sales={sales}
             salesUnavailable={salesUnavailable}
             startCalculation={() => {
@@ -359,21 +366,33 @@ export function Simulator({
 }
 
 function SalesView({
+  completedSales,
   recentlySavedSaleId,
   sales,
   salesUnavailable,
   startCalculation,
 }: {
+  completedSales: CompletedSaleSummary[];
   recentlySavedSaleId: string | null;
   sales: ActiveSaleSummary[];
   salesUnavailable: boolean;
   startCalculation: () => void;
 }) {
+  const [showCompletedSales, setShowCompletedSales] = useState(false);
+
   if (sales.length === 0) {
     return (
       <section className="empty-state" aria-labelledby="sales-title">
-        <h2 id="sales-title">Todavía no tiene ventas guardadas.</h2>
-        <p>Puede calcular cómo serían los pagos de una venta.</p>
+        <h2 id="sales-title">
+          {completedSales.length > 0
+            ? "No tiene ventas activas."
+            : "Todavía no tiene ventas guardadas."}
+        </h2>
+        <p>
+          {completedSales.length > 0
+            ? "Las ventas finalizadas están separadas de las que requieren atención."
+            : "Puede calcular cómo serían los pagos de una venta."}
+        </p>
         {salesUnavailable ? (
           <p className="empty-note">
             Las ventas guardadas aparecerán aquí cuando la base de datos esté
@@ -387,6 +406,13 @@ function SalesView({
         >
           CALCULAR UNA VENTA
         </button>
+        <CompletedSalesSection
+          completedSales={completedSales}
+          showCompletedSales={showCompletedSales}
+          toggleCompletedSales={() =>
+            setShowCompletedSales((isShowing) => !isShowing)
+          }
+        />
       </section>
     );
   }
@@ -425,9 +451,72 @@ function SalesView({
               <SummaryItem label="Próximo pago" value={sale.nextPaymentDate} />
               <SummaryItem label="Pago aproximado" value={sale.targetPayment} />
             </dl>
+            <Link
+              className="secondary-action action-link"
+              href={`/sales/${sale.id}`}
+            >
+              VER VENTA
+            </Link>
           </article>
         ))}
       </div>
+
+      <CompletedSalesSection
+        completedSales={completedSales}
+        showCompletedSales={showCompletedSales}
+        toggleCompletedSales={() =>
+          setShowCompletedSales((isShowing) => !isShowing)
+        }
+      />
+    </section>
+  );
+}
+
+function CompletedSalesSection({
+  completedSales,
+  showCompletedSales,
+  toggleCompletedSales,
+}: {
+  completedSales: CompletedSaleSummary[];
+  showCompletedSales: boolean;
+  toggleCompletedSales: () => void;
+}) {
+  if (completedSales.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="completed-sales" aria-labelledby="completed-title">
+      <button
+        className="secondary-action wide"
+        type="button"
+        onClick={toggleCompletedSales}
+      >
+        {showCompletedSales
+          ? "OCULTAR VENTAS FINALIZADAS"
+          : "VER VENTAS FINALIZADAS"}
+      </button>
+
+      {showCompletedSales ? (
+        <div className="completed-sales-list">
+          <h3 id="completed-title">Ventas finalizadas</h3>
+          {completedSales.map((sale) => (
+            <article className="completed-sale-card" key={sale.id}>
+              <div>
+                <h4>{sale.name}</h4>
+                <p>{sale.buyerName}</p>
+              </div>
+              <dl className="completed-sale-summary">
+                <SummaryItem label="Estado" value={sale.statusLabel} />
+                <SummaryItem
+                  label="Saldo pendiente"
+                  value={sale.currentBalance}
+                />
+              </dl>
+            </article>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }
