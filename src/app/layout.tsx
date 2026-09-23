@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import "./globals.css";
 
-import { appInfo } from "../lib/app-info";
+import { appInfo } from "@/lib/app-info";
 
 export const metadata: Metadata = {
   title: appInfo.name,

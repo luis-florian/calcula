@@ -1,5 +1,6 @@
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
+import prettierConfig from "eslint-config-prettier/flat";
 
 const eslintConfig = [
   {
@@ -12,6 +13,7 @@ const eslintConfig = [
   },
   ...nextVitals,
   ...nextTypescript,
+  prettierConfig,
 ];
 
 export default eslintConfig;

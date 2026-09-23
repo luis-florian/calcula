@@ -1,4 +1,4 @@
-import { appInfo } from "../lib/app-info";
+import { appInfo } from "@/lib/app-info";
 
 export default function Home() {
   return (
