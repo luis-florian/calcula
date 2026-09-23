@@ -11,6 +11,7 @@ import {
   zeroMoney,
 } from "@/domain/financial";
 import type { ProjectionRow } from "@/domain/financial";
+import { formatLongDate, formatMoney } from "@/lib/format";
 import type { SimulationFormInput } from "@/validation/simulation";
 
 export type SimulationResult = {
@@ -72,8 +73,8 @@ export function simulateFinancing(
       numberOfPayments: term.numberOfPayments,
       totalInterest: formatMoney(term.totalInterest.value),
       totalPaid: formatMoney(term.totalPaid.value),
-      firstPaymentDate: formatDate(firstPaymentDate),
-      estimatedEndDate: formatDate(term.estimatedEndDate),
+      firstPaymentDate: formatLongDate(firstPaymentDate),
+      estimatedEndDate: formatLongDate(term.estimatedEndDate),
       projection: projection.map(toProjectionRow),
     };
   }
@@ -118,8 +119,8 @@ export function simulateFinancing(
     numberOfPayments: projection.length,
     totalInterest: formatMoney(totalInterest.value),
     totalPaid: formatMoney(totalPaid.value),
-    firstPaymentDate: formatDate(firstPaymentDate),
-    estimatedEndDate: formatDate(targetEndDate),
+    firstPaymentDate: formatLongDate(firstPaymentDate),
+    estimatedEndDate: formatLongDate(targetEndDate),
     projection: projection.map(toProjectionRow),
   };
 }
@@ -127,31 +128,13 @@ export function simulateFinancing(
 function toProjectionRow(row: ProjectionRow): SimulationProjectionRow {
   return {
     paymentNumber: row.paymentNumber,
-    expectedDate: formatDate(row.expectedDate),
+    expectedDate: formatLongDate(row.expectedDate),
     openingBalance: formatMoney(row.openingBalance.value),
     payment: formatMoney(row.payment.value),
     interest: formatMoney(row.interest.value),
     principal: formatMoney(row.principal.value),
     closingBalance: formatMoney(row.closingBalance.value),
   };
-}
-
-function formatMoney(value: string): string {
-  const [whole = "0", cents = "00"] = value.split(".");
-  const formattedWhole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  return `Q${formattedWhole}.${cents.padEnd(2, "0").slice(0, 2)}`;
-}
-
-function formatDate(value: string): string {
-  const [year, month, day] = value.split("-").map(Number);
-
-  return new Intl.DateTimeFormat("es-GT", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, day)));
 }
 
 function formatPaymentCount(numberOfPayments: number): string {

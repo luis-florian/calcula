@@ -8,6 +8,7 @@ import {
   type SaveSaleActionState,
   type SimulationActionState,
 } from "@/app/actions";
+import type { ActiveSaleSummary } from "@/application/sales-summary";
 
 type Mode = "PAYMENT" | "TERM";
 type SaveStep = "idle" | "form" | "confirm";
@@ -24,7 +25,13 @@ const simulationFieldNames = [
   "firstPaymentDate",
 ] as const;
 
-export function Simulator() {
+export function Simulator({
+  initialSales = [],
+  salesUnavailable = false,
+}: {
+  initialSales?: ActiveSaleSummary[];
+  salesUnavailable?: boolean;
+}) {
   const [activeSection, setActiveSection] = useState<"sales" | "calculate">(
     "sales",
   );
@@ -45,6 +52,16 @@ export function Simulator() {
     () => state.result?.projection.slice(0, visiblePayments) ?? [],
     [state.result?.projection, visiblePayments],
   );
+  const sales = useMemo(() => {
+    if (
+      !saveState.sale ||
+      initialSales.some((sale) => sale.id === saveState.sale?.id)
+    ) {
+      return initialSales;
+    }
+
+    return [saveState.sale, ...initialSales];
+  }, [initialSales, saveState.sale]);
 
   return (
     <div className="app-frame">
@@ -57,19 +74,15 @@ export function Simulator() {
 
       <main className="main-content">
         {activeSection === "sales" ? (
-          <section className="empty-state" aria-labelledby="sales-title">
-            <h2 id="sales-title">Todavía no tiene ventas guardadas.</h2>
-            <button
-              className="primary-action"
-              type="button"
-              onClick={() => {
-                setActiveSection("calculate");
-                setMode(null);
-              }}
-            >
-              CALCULAR UNA VENTA
-            </button>
-          </section>
+          <SalesView
+            recentlySavedSaleId={saveState.sale?.id ?? null}
+            sales={sales}
+            salesUnavailable={salesUnavailable}
+            startCalculation={() => {
+              setActiveSection("calculate");
+              setMode(null);
+            }}
+          />
         ) : (
           <section aria-labelledby="calculate-title">
             {!mode ? (
@@ -342,6 +355,80 @@ export function Simulator() {
         </button>
       </nav>
     </div>
+  );
+}
+
+function SalesView({
+  recentlySavedSaleId,
+  sales,
+  salesUnavailable,
+  startCalculation,
+}: {
+  recentlySavedSaleId: string | null;
+  sales: ActiveSaleSummary[];
+  salesUnavailable: boolean;
+  startCalculation: () => void;
+}) {
+  if (sales.length === 0) {
+    return (
+      <section className="empty-state" aria-labelledby="sales-title">
+        <h2 id="sales-title">Todavía no tiene ventas guardadas.</h2>
+        <p>Puede calcular cómo serían los pagos de una venta.</p>
+        {salesUnavailable ? (
+          <p className="empty-note">
+            Las ventas guardadas aparecerán aquí cuando la base de datos esté
+            configurada.
+          </p>
+        ) : null}
+        <button
+          className="primary-action"
+          type="button"
+          onClick={startCalculation}
+        >
+          CALCULAR UNA VENTA
+        </button>
+      </section>
+    );
+  }
+
+  return (
+    <section className="sales-view" aria-labelledby="sales-title">
+      <div className="section-heading">
+        <h2 id="sales-title">Ventas activas</h2>
+        <button
+          className="primary-action compact"
+          type="button"
+          onClick={startCalculation}
+        >
+          CALCULAR NUEVA VENTA
+        </button>
+      </div>
+
+      {recentlySavedSaleId ? (
+        <p className="success-message" role="status">
+          Venta guardada.
+        </p>
+      ) : null}
+
+      <div className="sales-list">
+        {sales.map((sale) => (
+          <article className="sale-card" key={sale.id}>
+            <div>
+              <h3>{sale.name}</h3>
+              <p>{sale.buyerName}</p>
+            </div>
+            <dl className="sale-summary">
+              <SummaryItem
+                label="Saldo pendiente"
+                value={sale.currentBalance}
+              />
+              <SummaryItem label="Próximo pago" value={sale.nextPaymentDate} />
+              <SummaryItem label="Pago aproximado" value={sale.targetPayment} />
+            </dl>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

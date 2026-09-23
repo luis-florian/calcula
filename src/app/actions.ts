@@ -3,6 +3,10 @@
 import { FinancialError } from "@/domain/financial";
 import { createFinancingInputFromSimulation } from "@/application/create-financing-from-simulation";
 import {
+  toActiveSaleSummary,
+  type ActiveSaleSummary,
+} from "@/application/sales-summary";
+import {
   simulateFinancing,
   type SimulationResult,
 } from "@/application/simulate-financing";
@@ -19,6 +23,7 @@ export type SimulationActionState = {
 export type SaveSaleActionState = {
   error?: string;
   financingId?: string;
+  sale?: ActiveSaleSummary;
   success?: string;
 };
 
@@ -116,6 +121,7 @@ export async function saveSimulationAsSale(
 
     return {
       financingId: financing.id,
+      sale: toActiveSaleSummary(financing),
       success: "Venta guardada.",
     };
   } catch (error) {

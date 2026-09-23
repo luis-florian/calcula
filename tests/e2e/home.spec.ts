@@ -6,6 +6,9 @@ test("calculates a financing simulation by payment amount", async ({
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Mis ventas" })).toBeVisible();
+  await expect(
+    page.getByText("Todavía no tiene ventas guardadas."),
+  ).toBeVisible();
 
   await page.getByRole("button", { name: "CALCULAR UNA VENTA" }).click();
   await page.getByRole("button", { name: /QUIERO INDICAR EL PAGO/ }).click();

@@ -89,9 +89,25 @@ button:disabled {
   text-align: center;
 }
 
+.empty-state p {
+  max-width: 520px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1.45;
+}
+
 .empty-state h2 {
   max-width: 720px;
   font-size: clamp(2rem, 6vw, 3.8rem);
+}
+
+.empty-note,
+.success-message {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  padding: 14px 16px;
 }
 
 .choice-view {
@@ -234,6 +250,11 @@ button:disabled {
   color: #ffffff;
 }
 
+.primary-action.compact {
+  min-height: 48px;
+  padding: 12px 16px;
+}
+
 .primary-action:hover,
 .primary-action:focus-visible {
   background: var(--accent-dark);
@@ -358,6 +379,73 @@ button:disabled {
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 
+.sales-view {
+  display: grid;
+  gap: 18px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+}
+
+.success-message {
+  margin: 0;
+  color: var(--accent-dark);
+  font-weight: 800;
+}
+
+.sales-list {
+  display: grid;
+  gap: 16px;
+}
+
+.sale-card {
+  display: grid;
+  gap: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: clamp(20px, 4vw, 28px);
+}
+
+.sale-card h3,
+.sale-card p {
+  margin: 0;
+}
+
+.sale-card h3 {
+  font-size: clamp(1.55rem, 4vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.sale-card p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.sale-summary {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  margin: 0;
+}
+
+.sale-summary .summary-item:first-child dd {
+  color: var(--foreground);
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  line-height: 1;
+}
+
 .bottom-nav {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -390,8 +478,13 @@ button:disabled {
   }
 
   .summary-list,
-  .payment-row dl {
+  .payment-row dl,
+  .sale-summary {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .sale-summary .summary-item:first-child {
+    grid-column: 1 / -1;
   }
 }
 
@@ -405,7 +498,13 @@ button:disabled {
   }
 
   .summary-list,
-  .payment-row dl {
+  .payment-row dl,
+  .sale-summary {
     grid-template-columns: 1fr;
+  }
+
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
