@@ -4,6 +4,7 @@ import { connection } from "next/server";
 
 import { getSaleDetail } from "@/application/get-sale-detail";
 import { PaymentRegistration } from "@/components/payment-registration";
+import { requireAuthenticatedUser } from "@/lib/auth";
 
 export default async function NewPaymentPage({
   params,
@@ -13,9 +14,10 @@ export default async function NewPaymentPage({
   await connection();
 
   const { id } = await params;
+  const user = await requireAuthenticatedUser();
   const result = await getSaleDetail({
     id,
-    ownerId: "dev_user",
+    ownerId: user.id,
   });
 
   if (result.databaseUnavailable) {

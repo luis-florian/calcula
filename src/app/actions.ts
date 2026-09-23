@@ -10,6 +10,7 @@ import {
   simulateFinancing,
   type SimulationResult,
 } from "@/application/simulate-financing";
+import { requireAuthenticatedUser } from "@/lib/auth";
 import { simulationFormSchema } from "@/validation/simulation";
 import { z } from "zod";
 
@@ -109,12 +110,13 @@ export async function saveSimulationAsSale(
   }
 
   try {
+    const user = await requireAuthenticatedUser();
     const { createFinancing } = await import("@/db/queries/financings");
     const financing = await createFinancing(
       createFinancingInputFromSimulation({
         buyerName: saleIdentity.data.buyerName,
         name: saleIdentity.data.saleName,
-        ownerId: "dev_user",
+        ownerId: user.id,
         simulation: simulation.data,
       }),
     );

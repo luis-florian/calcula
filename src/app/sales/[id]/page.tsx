@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
 import { getSaleDetail } from "@/application/get-sale-detail";
+import { requireAuthenticatedUser } from "@/lib/auth";
 
 export default async function SaleDetailPage({
   params,
@@ -12,9 +13,10 @@ export default async function SaleDetailPage({
   await connection();
 
   const { id } = await params;
+  const user = await requireAuthenticatedUser();
   const result = await getSaleDetail({
     id,
-    ownerId: "dev_user",
+    ownerId: user.id,
   });
 
   if (result.databaseUnavailable) {

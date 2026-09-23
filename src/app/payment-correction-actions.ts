@@ -5,6 +5,7 @@ import {
   getPaymentErrorMessage,
   type RegisteredPaymentResult,
 } from "@/application/payment-registration";
+import { requireAuthenticatedUser } from "@/lib/auth";
 import { paymentCorrectionSchema } from "@/validation/payment";
 
 export type PaymentCorrectionActionState = {
@@ -29,9 +30,10 @@ export async function correctPaymentAction(
   }
 
   try {
+    const user = await requireAuthenticatedUser();
     return {
       result: await correctPayment({
-        ownerId: "dev_user",
+        ownerId: user.id,
         payment: parsed.data,
       }),
     };

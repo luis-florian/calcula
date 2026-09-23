@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
 import { getPaymentPlan } from "@/application/get-payment-plan";
+import { requireAuthenticatedUser } from "@/lib/auth";
 
 export default async function PaymentPlanPage({
   params,
@@ -12,9 +13,10 @@ export default async function PaymentPlanPage({
   await connection();
 
   const { id } = await params;
+  const user = await requireAuthenticatedUser();
   const result = await getPaymentPlan({
     financingId: id,
-    ownerId: "dev_user",
+    ownerId: user.id,
   });
 
   if (result.databaseUnavailable) {

@@ -7,6 +7,7 @@ import {
   type RegisteredPaymentResult,
 } from "@/application/payment-registration";
 import type { PaymentCalculationResult } from "@/application/payment-calculation";
+import { requireAuthenticatedUser } from "@/lib/auth";
 import {
   paymentConfirmationSchema,
   paymentPreviewSchema,
@@ -42,10 +43,11 @@ export async function previewPaymentAction(
   }
 
   try {
+    const user = await requireAuthenticatedUser();
     return {
       idempotencyKey: crypto.randomUUID(),
       preview: await previewPayment({
-        ownerId: "dev_user",
+        ownerId: user.id,
         payment: parsed.data,
       }),
       values,
@@ -72,9 +74,10 @@ export async function registerPaymentAction(
   }
 
   try {
+    const user = await requireAuthenticatedUser();
     return {
       result: await registerPayment({
-        ownerId: "dev_user",
+        ownerId: user.id,
         payment: parsed.data,
       }),
     };

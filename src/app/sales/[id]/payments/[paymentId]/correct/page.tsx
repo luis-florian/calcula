@@ -4,6 +4,7 @@ import { connection } from "next/server";
 
 import { getPaymentDetail } from "@/application/get-payment-plan";
 import { PaymentCorrection } from "@/components/payment-correction";
+import { requireAuthenticatedUser } from "@/lib/auth";
 
 export default async function CorrectPaymentPage({
   params,
@@ -13,9 +14,10 @@ export default async function CorrectPaymentPage({
   await connection();
 
   const { id, paymentId } = await params;
+  const user = await requireAuthenticatedUser();
   const result = await getPaymentDetail({
     financingId: id,
-    ownerId: "dev_user",
+    ownerId: user.id,
     paymentId,
   });
 
