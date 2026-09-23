@@ -50,3 +50,40 @@ export async function getLastConfirmedPaymentForFinancing(
 
   return payment ?? null;
 }
+
+export async function listConfirmedPaymentsForFinancing(
+  financingId: string,
+): Promise<Payment[]> {
+  const db = getDb();
+
+  return db
+    .select()
+    .from(payments)
+    .where(
+      and(
+        eq(payments.financingId, financingId),
+        eq(payments.status, "CONFIRMED"),
+      ),
+    )
+    .orderBy(desc(payments.paymentDate), desc(payments.createdAt));
+}
+
+export async function getConfirmedPaymentByFinancing(input: {
+  financingId: string;
+  paymentId: string;
+}): Promise<Payment | null> {
+  const db = getDb();
+  const [payment] = await db
+    .select()
+    .from(payments)
+    .where(
+      and(
+        eq(payments.financingId, input.financingId),
+        eq(payments.id, input.paymentId),
+        eq(payments.status, "CONFIRMED"),
+      ),
+    )
+    .limit(1);
+
+  return payment ?? null;
+}

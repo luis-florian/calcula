@@ -79,12 +79,18 @@ export default async function SaleDetailPage({
           </Link>
 
           <div className="detail-actions" aria-label="Opciones de la venta">
-            <button className="secondary-action wide" disabled type="button">
+            <Link
+              className="secondary-action wide"
+              href={`/sales/${sale.id}/plan`}
+            >
               Ver plan de pagos
-            </button>
-            <button className="secondary-action wide" disabled type="button">
+            </Link>
+            <Link
+              className="secondary-action wide"
+              href={`/sales/${sale.id}/payments`}
+            >
               Ver pagos recibidos
-            </button>
+            </Link>
             <button className="secondary-action wide" disabled type="button">
               Datos de la venta
             </button>
