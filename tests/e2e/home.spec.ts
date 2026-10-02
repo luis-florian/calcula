@@ -1,14 +1,18 @@
 import { expect, test } from "@playwright/test";
+import { loadEnvConfig } from "@next/env";
+import { Client } from "pg";
 
 test("calculates a financing simulation by payment amount", async ({
   page,
 }) => {
+  loadEnvConfig(process.cwd());
+  const databaseUrl = process.env.DATABASE_URL;
+  const saleName = `Casa zona 10 ${Date.now()}`;
+  const buyerName = "Ana López";
+
   await page.goto("/");
 
   await expect(page.getByRole("heading", { name: "Mis ventas" })).toBeVisible();
-  await expect(
-    page.getByText("Todavía no tiene ventas guardadas."),
-  ).toBeVisible();
 
   await page.getByRole("button", { name: "CALCULAR UNA VENTA" }).click();
   await page.getByRole("button", { name: /QUIERO INDICAR EL PAGO/ }).click();
@@ -27,15 +31,44 @@ test("calculates a financing simulation by payment amount", async ({
   await expect(page.getByText("Q762,772.60")).toBeVisible();
 
   await page.getByRole("button", { name: "GUARDAR VENTA" }).click();
-  await page
-    .getByLabel("¿Cómo quiere identificar esta venta?")
-    .fill("Casa zona 10");
-  await page.getByLabel("¿A quién se la vendió?").fill("Ana López");
+  await page.getByLabel("¿Cómo quiere identificar esta venta?").fill(saleName);
+  await page.getByLabel("¿A quién se la vendió?").fill(buyerName);
   await page.getByRole("button", { name: "CONTINUAR" }).click();
 
   await expect(page.getByText("Confirmar venta")).toBeVisible();
-  await expect(page.getByText("Casa zona 10")).toBeVisible();
+  await expect(page.getByText(saleName)).toBeVisible();
   await page.getByRole("button", { name: "GUARDAR VENTA" }).click();
 
-  await expect(page.getByText(/Configure DATABASE_URL/)).toBeVisible();
+  if (databaseUrl) {
+    await expect(page.getByText("Venta guardada.")).toBeVisible();
+    await cleanupSale(databaseUrl, saleName, buyerName);
+  } else {
+    await expect(page.getByText(/Configure DATABASE_URL/)).toBeVisible();
+  }
 });
+
+async function cleanupSale(
+  databaseUrl: string,
+  saleName: string,
+  buyerName: string,
+) {
+  const client = new Client({ connectionString: databaseUrl });
+
+  await client.connect();
+
+  try {
+    await client.query(
+      `delete from payments
+       where financing_id in (
+         select id from financings where name = $1 and buyer_name = $2
+       )`,
+      [saleName, buyerName],
+    );
+    await client.query(
+      "delete from financings where name = $1 and buyer_name = $2",
+      [saleName, buyerName],
+    );
+  } finally {
+    await client.end();
+  }
+}
