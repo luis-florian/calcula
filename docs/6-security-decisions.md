@@ -2,28 +2,28 @@
 
 ## Authentication provider
 
-Production authentication will use Auth.js / NextAuth.
+Production authentication uses Auth.js / NextAuth with a Credentials provider.
 
 Reasoning:
 
 - compatible with Next.js and Vercel;
 - supports persistent sessions;
 - allows a simple custom login screen;
-- can be configured without public registration;
+- is configured without public registration;
 - lets Amorta start with one allowed user and later grow without changing the
-  financing ownership model.
+  financing ownership model;
+- keeps the password out of the database schema and source code by storing only
+  a bcrypt hash in environment variables.
 
-For the current local implementation, Amorta uses a server-only authentication
-boundary in `src/lib/auth.ts`. It returns the configured single user id from
-`AMORTA_SINGLE_USER_ID`, defaulting to `dev_user`. This keeps all routes and
-server actions coded against an authenticated user instead of hardcoded owner
-ids, while postponing real provider credentials and database-backed auth setup
-until production configuration.
+Amorta uses a server-only authentication boundary in `src/lib/auth.ts`. It reads
+the Auth.js session and returns the stable configured owner id from
+`AMORTA_SINGLE_USER_ID`, defaulting to `dev_user`. Routes and server actions are
+coded against an authenticated user instead of hardcoded owner ids.
 
 ## Phase 8 security review
 
-- Secrets stay in environment variables: `DATABASE_URL`, `AUTH_SECRET`, and
-  `AMORTA_SINGLE_USER_ID`.
+- Secrets stay in environment variables: `DATABASE_URL`, `AUTH_SECRET`,
+  `AMORTA_LOGIN_PASSWORD_HASH`, and `AMORTA_SINGLE_USER_ID`.
 - Server-only auth logic is isolated in `src/lib/auth.ts`.
 - Client components do not receive secrets or owner ids from the browser.
 - Private routes and Server Actions call `requireAuthenticatedUser()` before

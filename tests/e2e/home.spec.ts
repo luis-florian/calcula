@@ -7,10 +7,26 @@ test("calculates a financing simulation by payment amount", async ({
 }) => {
   loadEnvConfig(process.cwd());
   const databaseUrl = process.env.DATABASE_URL;
+  const loginPassword = process.env.AMORTA_E2E_PASSWORD;
+  const loginUsername = process.env.AMORTA_LOGIN_USERNAME;
   const saleName = `Casa zona 10 ${Date.now()}`;
   const buyerName = "Ana López";
 
   await page.goto("/");
+
+  if (
+    await page.getByRole("heading", { name: "Entrar a Amorta" }).isVisible()
+  ) {
+    if (!loginUsername || !loginPassword) {
+      throw new Error(
+        "AMORTA_LOGIN_USERNAME and AMORTA_E2E_PASSWORD are required for authenticated E2E tests.",
+      );
+    }
+
+    await page.getByLabel("Usuario").fill(loginUsername);
+    await page.getByLabel("Contraseña").fill(loginPassword);
+    await page.getByRole("button", { name: "ENTRAR" }).click();
+  }
 
   await expect(page.getByRole("heading", { name: "Mis ventas" })).toBeVisible();
 

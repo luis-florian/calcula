@@ -9,6 +9,7 @@ import {
   type SaveSaleActionState,
   type SimulationActionState,
 } from "@/app/actions";
+import { logoutAction } from "@/app/auth-actions";
 import type {
   ActiveSaleSummary,
   CompletedSaleSummary,
@@ -76,6 +77,11 @@ export function Simulator({
           <p className="brand">AMORTA</p>
           <h1>{activeSection === "sales" ? "Mis ventas" : "Calcular"}</h1>
         </div>
+        <form action={logoutAction}>
+          <button className="logout-action" type="submit">
+            Salir
+          </button>
+        </form>
       </header>
 
       <main className="main-content">

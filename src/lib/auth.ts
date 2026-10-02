@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 
-import { serverEnv } from "@/lib/env";
+import { auth } from "@/auth";
 
 export type AuthenticatedUser = {
   id: string;
@@ -11,9 +11,13 @@ export type AuthenticatedUser = {
 
 export const getAuthenticatedUser = cache(
   async (): Promise<AuthenticatedUser | null> => {
-    return {
-      id: serverEnv.AMORTA_SINGLE_USER_ID,
-    };
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return null;
+    }
+
+    return { id: session.user.id };
   },
 );
 

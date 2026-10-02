@@ -53,6 +53,10 @@ button:disabled {
 }
 
 .top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 22px clamp(18px, 4vw, 48px);
@@ -81,6 +85,16 @@ button:disabled {
   text-transform: uppercase;
 }
 
+.logout-action {
+  min-height: 46px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-strong);
+  color: var(--foreground);
+  font-weight: 800;
+  padding: 10px 16px;
+}
+
 .main-content {
   width: min(100%, 1180px);
   margin: 0 auto;
@@ -97,6 +111,25 @@ button:disabled {
   place-content: center;
   gap: 28px;
   text-align: center;
+}
+
+.login-frame {
+  grid-template-rows: 1fr;
+}
+
+.login-view {
+  display: grid;
+  width: min(100%, 520px);
+  min-height: 72svh;
+  align-content: center;
+  gap: 22px;
+  margin: 0 auto;
+}
+
+.login-view h1 {
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3.6rem);
+  line-height: 1;
 }
 
 .empty-state p {
@@ -156,6 +189,7 @@ button:disabled {
 .choice-button,
 .primary-action,
 .secondary-action,
+.logout-action,
 .back-link,
 .history-card,
 .bottom-nav button {
@@ -294,6 +328,7 @@ button:disabled {
 
 .primary-action:focus-visible,
 .secondary-action:focus-visible,
+.logout-action:focus-visible,
 .back-link:focus-visible,
 .history-card:focus-visible,
 .bottom-nav button:focus-visible {
@@ -309,6 +344,8 @@ button:disabled {
 
 .secondary-action:hover,
 .secondary-action:focus-visible,
+.logout-action:hover,
+.logout-action:focus-visible,
 .history-card:hover,
 .history-card:focus-visible {
   border-color: var(--accent);
@@ -893,6 +930,8 @@ button:disabled {
   }
 
   .top-bar {
+    align-items: flex-start;
+    flex-direction: column;
     padding: 18px 16px;
   }
 }

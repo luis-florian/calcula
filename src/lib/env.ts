@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 const serverEnvSchema = z.object({
+  AMORTA_LOGIN_PASSWORD_HASH: z.string().min(20).optional(),
+  AMORTA_LOGIN_USERNAME: z.string().trim().min(1).optional(),
   AMORTA_SINGLE_USER_ID: z.string().trim().min(1).default("dev_user"),
   AUTH_SECRET: z.string().min(32).optional(),
   DATABASE_URL: z.string().url().optional(),
