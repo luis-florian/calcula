@@ -189,6 +189,7 @@ button:disabled {
 .choice-button,
 .primary-action,
 .secondary-action,
+.danger-action,
 .logout-action,
 .back-link,
 .history-card,
@@ -298,7 +299,8 @@ button:disabled {
 }
 
 .primary-action,
-.secondary-action {
+.secondary-action,
+.danger-action {
   display: inline-grid;
   place-items: center;
   min-height: 58px;
@@ -328,6 +330,7 @@ button:disabled {
 
 .primary-action:focus-visible,
 .secondary-action:focus-visible,
+.danger-action:focus-visible,
 .logout-action:focus-visible,
 .back-link:focus-visible,
 .history-card:focus-visible,
@@ -342,8 +345,16 @@ button:disabled {
   color: var(--foreground);
 }
 
+.danger-action {
+  border: 1px solid rgba(159, 47, 47, 0.45);
+  background: #fff7f5;
+  color: var(--danger);
+}
+
 .secondary-action:hover,
 .secondary-action:focus-visible,
+.danger-action:hover,
+.danger-action:focus-visible,
 .logout-action:hover,
 .logout-action:focus-visible,
 .history-card:hover,
@@ -353,7 +364,8 @@ button:disabled {
 }
 
 .primary-action.wide,
-.secondary-action.wide {
+.secondary-action.wide,
+.danger-action.wide {
   width: 100%;
 }
 
@@ -557,7 +569,9 @@ button:disabled {
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface-strong);
+  color: var(--foreground);
   padding: 18px;
+  text-decoration: none;
 }
 
 .completed-sale-card h4 {

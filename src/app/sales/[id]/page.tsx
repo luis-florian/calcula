@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
 import { getSaleDetail } from "@/application/get-sale-detail";
+import { DeleteSaleForm } from "@/components/delete-sale-form";
 import { requireAuthenticatedUser } from "@/lib/auth";
 
 export default async function SaleDetailPage({
@@ -85,6 +86,7 @@ export default async function SaleDetailPage({
               >
                 VER HISTORIAL
               </Link>
+              <DeleteSaleForm financingId={id} />
             </section>
           </article>
         </main>
@@ -146,6 +148,7 @@ export default async function SaleDetailPage({
             <button className="secondary-action wide" disabled type="button">
               Datos de la venta
             </button>
+            <DeleteSaleForm financingId={sale.id} />
           </div>
         </article>
       </main>

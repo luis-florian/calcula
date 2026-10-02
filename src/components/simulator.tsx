@@ -508,7 +508,11 @@ function CompletedSalesSection({
         <div className="completed-sales-list">
           <h3 id="completed-title">Ventas finalizadas</h3>
           {completedSales.map((sale) => (
-            <article className="completed-sale-card" key={sale.id}>
+            <Link
+              className="completed-sale-card"
+              href={`/sales/${sale.id}`}
+              key={sale.id}
+            >
               <div>
                 <h4>{sale.name}</h4>
                 <p>{sale.buyerName}</p>
@@ -520,7 +524,7 @@ function CompletedSalesSection({
                   value={sale.currentBalance}
                 />
               </dl>
-            </article>
+            </Link>
           ))}
         </div>
       ) : null}
